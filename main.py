@@ -12,7 +12,7 @@ START = time.time()
 FIVE_SECONDS = 5
 
 
-#TODO: Check prices list. Seems it takes "5" from somewhere.
+#TODO: Got an error with IDs
 
 def store_prices():
     STORE_ITEMS = DRIVER.find_elements(by=By.CSS_SELECTOR, value="#store b")
