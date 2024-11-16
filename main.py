@@ -15,12 +15,23 @@ FIVE_SECONDS = 5
 #TODO: Check prices list. Seems it takes "5" from somewhere.
 
 def store_prices():
-    STORE_ITEMS = DRIVER.find_element(By.ID, "store").text.strip().split()
-    prices = []
+    STORE_ITEMS = DRIVER.find_elements(by=By.CSS_SELECTOR, value="#store b")
+    item_prices = []
     for item in STORE_ITEMS:
-        if item.isdigit():
-            prices.append(int(item))
-    return sorted(prices)
+        element_text = item.text
+        if element_text != "":
+            cost = int(element_text.split("-")[1].strip().replace(",", ""))
+            item_prices.append(cost)
+    return item_prices        
+
+def highest_affordable_upgrade(money: int, upgrades: dict):# -> String:
+    affordable = {}
+    for price, item_id in upgrades.items():
+        if money >= price:
+            affordable[price] = item_id
+    highest_affordable = max(affordable)
+    to_purchase_id = affordable[highest_affordable]
+    return to_purchase_id
 
 def click_cookie():
     COOKIE.click()
@@ -35,10 +46,10 @@ while True:
             items = DRIVER.find_elements(by=By.CSS_SELECTOR, value="#store div")
             item_ids = [item.get_attribute("id") for item in items]
             cookie_upgrades[store_prices()[n]] = item_ids[n]
-        # for price, item_id in cookie_upgrades.items():
-            # if cookie_counter >= price:
-        print(cookie_upgrades)
-                # DRIVER.find_element(By.ID, item_id).click()
+            upgrade_purchase = highest_affordable_upgrade(cookie_counter, cookie_upgrades)
+            DRIVER.find_element(by=By.ID, value=upgrade_purchase).click()
+            timeout = time.time() + 5
+
 
 
 # driver.close()
