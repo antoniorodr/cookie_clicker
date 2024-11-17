@@ -46,6 +46,8 @@
 
 ## :dart: About ##
 
+Works on [this](http://orteil.dashnet.org/experiments/cookie/) cookie clicker version.
+
 Simple script that automatically clicks on the cookie and buys the best upgrade available every 5 seconds. The script stops after 5 minutes and prints how many cookies per minute were achieved.
 
 ## :sparkles: Features ##
