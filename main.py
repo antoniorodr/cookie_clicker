@@ -8,11 +8,9 @@ OPTIONS.add_experimental_option("detach", True)
 DRIVER = webdriver.Chrome(options = OPTIONS)
 DRIVER.get("http://orteil.dashnet.org/experiments/cookie/")
 COOKIE = DRIVER.find_element(By.ID, "cookie")
-START = time.time()
-FIVE_SECONDS = 5
 
-
-#TODO: Got an error with IDs
+timeout = time.time() + 5
+five_min = time.time() + 60*5 
 
 def store_prices():
     STORE_ITEMS = DRIVER.find_elements(by=By.CSS_SELECTOR, value="#store b")
@@ -36,20 +34,19 @@ def highest_affordable_upgrade(money: int, upgrades: dict):# -> String:
 def click_cookie():
     COOKIE.click()
 
-
 while True:
     click_cookie()
-    if time.time() > START + FIVE_SECONDS:
-        cookie_counter = int(DRIVER.find_element(By.ID, "money").text)
+    if time.time() > timeout:
+        cookie_counter = DRIVER.find_element(By.ID, "money").text.replace(",", "")
         cookie_upgrades = {}
         for n in range(len(store_prices())):
             items = DRIVER.find_elements(by=By.CSS_SELECTOR, value="#store div")
-            item_ids = [item.get_attribute("id") for item in items]
+            item_ids = [item.get_attribute("id") for item in items if item.get_attribute("id") != ""]
             cookie_upgrades[store_prices()[n]] = item_ids[n]
-            upgrade_purchase = highest_affordable_upgrade(cookie_counter, cookie_upgrades)
-            DRIVER.find_element(by=By.ID, value=upgrade_purchase).click()
-            timeout = time.time() + 5
-
-
-
-# driver.close()
+        upgrade_purchase = highest_affordable_upgrade(int(cookie_counter), cookie_upgrades)
+        DRIVER.find_element(by=By.ID, value=upgrade_purchase).click()
+        timeout = time.time() + 5
+    if time.time() > five_min:
+        cookie_per_s = DRIVER.find_element(by=By.ID, value="cps").text
+        print(cookie_per_s)
+        break
