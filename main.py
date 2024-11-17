@@ -31,11 +31,8 @@ def highest_affordable_upgrade(money: int, upgrades: dict):# -> String:
     to_purchase_id = affordable[highest_affordable]
     return to_purchase_id
 
-def click_cookie():
-    COOKIE.click()
-
 while True:
-    click_cookie()
+    COOKIE.click()
     if time.time() > timeout:
         cookie_counter = DRIVER.find_element(By.ID, "money").text.replace(",", "")
         cookie_upgrades = {}
